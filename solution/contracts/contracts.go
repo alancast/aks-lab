@@ -37,15 +37,9 @@ func main() {
 	fmt.Println("CONTRACTS_PORT:", contracts_port)
 
 	router := gin.Default()
-	router.GET("/contracts", getContracts)
 	router.GET("/contracts", getContract)
 
 	router.Run(fmt.Sprintf("localhost:%d", contracts_port))
-}
-
-// getContracts responds with the list of all contracts as JSON.
-func getContracts(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, contracts)
 }
 
 // getContract locates the contract whose ID value matches the id
@@ -53,7 +47,9 @@ func getContracts(c *gin.Context) {
 func getContract(c *gin.Context) {
 	artist, ok := c.GetQuery("artist")
 	if !ok {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Must include artist in as query param"})
+		fmt.Println("Returning all contracts as no artist was specified")
+		c.IndentedJSON(http.StatusOK, contracts)
+		return
 	}
 
 	// Loop over the list of albums, looking for
