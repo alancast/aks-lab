@@ -1,9 +1,14 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 type song struct {
@@ -42,11 +47,25 @@ var songs = []song{
 }
 
 func main() {
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	songs_port, err := strconv.Atoi(os.Getenv("SONGS_PORT"))
+	if err != nil {
+		log.Fatalf("Missing SONGS_PORT variable")
+	}
+	fmt.Println("SONGS_PORT:", songs_port)
+
 	router := gin.Default()
 	router.GET("/songs", getSongs)
 	router.GET("/songs/:id", getSong)
+	router.POST("/songs", postSong)
 
-	router.Run("localhost:8080")
+	router.Run(fmt.Sprintf("localhost:%d", songs_port))
 }
 
 // getSongs responds with the list of all songs as JSON.
@@ -57,7 +76,10 @@ func getSongs(c *gin.Context) {
 // getSong locates the song whose ID value matches the id
 // parameter sent by the client, then returns that song as a response.
 func getSong(c *gin.Context) {
-	id := c.Param("id")
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Song id must be an integer"})
+	}
 
 	// Loop over the list of albums, looking for
 	// an album whose ID value matches the parameter.
@@ -68,4 +90,21 @@ func getSong(c *gin.Context) {
 		}
 	}
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Song not found"})
+}
+
+// postSong adds a song from JSON received in the request body.
+func postSong(c *gin.Context) {
+	var newSong song
+
+	// Call BindJSON to bind the received JSON to newSong
+	if err := c.BindJSON(&newSong); err != nil {
+		return
+	}
+
+	// Give the new song an Id
+	newSong.Id = len(songs)
+
+	// Add the new song to the slice.
+	songs = append(songs, newSong)
+	c.IndentedJSON(http.StatusCreated, newSong)
 }
