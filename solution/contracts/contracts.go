@@ -52,8 +52,8 @@ func getContract(c *gin.Context) {
 		return
 	}
 
-	// Loop over the list of albums, looking for
-	// an album whose ID value matches the parameter.
+	// Loop over the list of contracts, looking for
+	// a contract whose artist value matches the parameter.
 	for _, contract := range contracts {
 		if contract.Artist == artist {
 			c.IndentedJSON(http.StatusOK, contract)

@@ -81,8 +81,8 @@ func getSong(c *gin.Context) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Song id must be an integer"})
 	}
 
-	// Loop over the list of albums, looking for
-	// an album whose ID value matches the parameter.
+	// Loop over the list of songs, looking for
+	// a song whose ID value matches the parameter.
 	for _, song := range songs {
 		if song.Id == id {
 			c.IndentedJSON(http.StatusOK, song)
