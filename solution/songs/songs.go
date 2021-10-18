@@ -77,8 +77,8 @@ func getSongs(c *gin.Context) {
 // parameter sent by the client, then returns that song as a response.
 func getSong(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Song id must be an integer"})
+	if err != nil || id < 0 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Song id must be a positive integer"})
 	}
 
 	// Loop over the list of songs, looking for
