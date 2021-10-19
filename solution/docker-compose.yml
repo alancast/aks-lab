@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  songs:
+    container_name: songs-container
+    build:
+      context: ./songs
+      dockerfile: ./Dockerfile
+    ports:
+      - "10039:80"
+    env_file:
+     - ./songs/.env
+  contracts:
+    container_name: contracts-container
+    build:
+      context: ./contracts
+      dockerfile: ./Dockerfile
+    ports:
+      - "10139:80"
+    env_file:
+     - ./contracts/.env
+  songapi:
+    container_name: api-container
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    ports:
+      - "10239:80"
+    env_file:
+     - ./api/.env

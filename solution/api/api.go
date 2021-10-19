@@ -36,7 +36,7 @@ var contractServiceBaseUrl = "http://contracts"
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Println("WARNING: Couldn't load .env file")
 	}
 
 	port, err := strconv.Atoi(os.Getenv("PORT"))
@@ -60,7 +60,7 @@ func main() {
 	router := gin.Default()
 	router.GET("/songs", getSong)
 	router.POST("/songs", postSong)
-	router.Run(fmt.Sprintf("localhost:%d", port))
+	router.Run(fmt.Sprintf(":%d", port))
 }
 
 // getSong locates the song whose ID value matches the id
