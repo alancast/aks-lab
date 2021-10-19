@@ -47,25 +47,23 @@ var songs = []song{
 }
 
 func main() {
-	// load .env file
 	err := godotenv.Load(".env")
-
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Println("WARNING: Couldn't load .env file")
 	}
 
 	songs_port, err := strconv.Atoi(os.Getenv("SONGS_PORT"))
 	if err != nil {
 		log.Fatalf("Missing SONGS_PORT variable")
 	}
-	fmt.Println("SONGS_PORT:", songs_port)
+	log.Println("SONGS_PORT:", songs_port)
 
 	router := gin.Default()
 	router.GET("/songs", getSongs)
 	router.GET("/songs/:id", getSong)
 	router.POST("/songs", postSong)
 
-	router.Run(fmt.Sprintf("localhost:%d", songs_port))
+	router.Run(fmt.Sprintf(":%d", songs_port))
 }
 
 // getSongs responds with the list of all songs as JSON.

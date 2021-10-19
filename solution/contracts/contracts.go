@@ -23,23 +23,21 @@ var contracts = []contract{
 }
 
 func main() {
-	// load .env file
 	err := godotenv.Load(".env")
-
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		log.Println("WARNING: Couldn't load .env file")
 	}
 
 	contracts_port, err := strconv.Atoi(os.Getenv("CONTRACTS_PORT"))
 	if err != nil {
 		log.Fatalf("Missing CONTRACTS_PORT variable")
 	}
-	fmt.Println("CONTRACTS_PORT:", contracts_port)
+	log.Println("CONTRACTS_PORT:", contracts_port)
 
 	router := gin.Default()
 	router.GET("/contracts", getContract)
 
-	router.Run(fmt.Sprintf("localhost:%d", contracts_port))
+	router.Run(fmt.Sprintf(":%d", contracts_port))
 }
 
 // getContract locates the contract whose ID value matches the id
