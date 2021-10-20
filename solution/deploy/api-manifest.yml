@@ -1,25 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: songs-app
+  name: api-app
   labels:
-    app: songs
+    app: api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: songs
+      app: api
   template:
     metadata:
       labels:
-        app: songs
+        app: api
     spec:
       containers:
-      - name: songs
-        image: alexakslabacr.azurecr.io/songs:1.0.0
+      - name: api
+        image: alexakslabacr.azurecr.io/api:1.0.0
         env:
-        - name: SONGS_PORT
+        - name: PORT
           value: "80"
+        - name: SONG_SERVICE_BASE_URL
+          value: "http://songs/songs"
+        - name: CONTRACT_SERVICE_BASE_URL
+          value: "http://contracts/contracts"
         ports:
         - containerPort: 80
         resources:
@@ -33,10 +37,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: songs
+  name: api
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
   - port: 80
   selector:
-    app: songs
+    app: api
