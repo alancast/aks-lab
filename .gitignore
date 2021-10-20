@@ -1,3 +1,5 @@
 .DS_Store
 
 .env
+
+istio-1.11.*/

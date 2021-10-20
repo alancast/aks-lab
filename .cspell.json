@@ -1,0 +1,59 @@
+{
+    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+    "version": "0.2",
+    "dictionaryDefinitions": [
+        {
+            "name": "workspace",
+            "path": "./cspell-dict.txt",
+            "description": "Custom Workspace Dictionary",
+            "addWords": true,
+            "scope": "workspace"
+        }
+    ],
+    "dictionaries": [
+        "workspace"
+    ],
+    "ignorePaths": [
+        ".eslintignore",
+        ".gitattributes",
+        ".gitignore",
+        ".pnp.{js,cjs}",
+        ".prettierignore",
+        ".yarn",
+        "*.{png,jpg,pdf}",
+        "**/.gitignore",
+        "**/.vscode/**",
+        "**/{cspell.*,cSpell.*,.cspell.*,cspell.config.*}",
+        "**/*.snap",
+        "**/*.trie",
+        "**/coverage/**",
+        "**/dist/**",
+        "**/jest.config.js",
+        "**/node_modules/**",
+        "**/tsconfig.json",
+        "cspell.json",
+        "integration-tests/config/config.json",
+        "integration-tests/config/repositories/**",
+        "integration-tests/repositories/**",
+        "integration-tests/snapshots/**",
+        "lcov.info",
+        "package.json",
+        "package-lock.json",
+        "packages/*/samples/**",
+        "packages/Samples/**",
+        "temp",
+        "test-fixtures/**",
+        "test-packages/test-cspell-tools/src/*.txt"
+    ],
+    "useGitignore": true,
+    "ignoreWords": [
+        "alexakslabacr",
+        "godotenv",
+        "joho"
+    ],
+    "words": [
+        "azurecr",
+        "godotenv",
+        "joho"
+    ]
+}
