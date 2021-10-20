@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: songs-app
+  name: contracts-app
   labels:
-    app: songs
+    app: contracts
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: songs
+      app: contracts
   template:
     metadata:
       labels:
-        app: songs
+        app: contracts
     spec:
       containers:
-      - name: songs
-        image: alexakslabacr.azurecr.io/songs:1.0.0
+      - name: contracts
+        image: alexakslabacr.azurecr.io/contracts:1.0.0
         env:
-        - name: SONGS_PORT
+        - name: CONTRACTS_PORT
           value: "80"
         ports:
         - containerPort: 80
@@ -33,10 +33,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: songs
+  name: contracts
 spec:
   type: ClusterIP
   ports:
   - port: 80
   selector:
-    app: songs
+    app: contracts
