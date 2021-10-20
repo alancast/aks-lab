@@ -75,23 +75,27 @@ Ref:
 * https://docs.microsoft.com/en-us/azure/container-registry/container-registry-roles?tabs=azure-cli
 
 <details>
-  <summary>Provision AKS</summary>
+  <summary>Provision VNET and AKS</summary>
 
 ```bash
 # Set up the following variables (configure as needed)
 RESOURCE_GROUP=akslabhv-rg # created above
 ACR_NAME=akslabhv # created above
+VNET_NAME=akslabhv-vnet
+SUBNET_NAME=akslabhv-subnet
 CLUSTER_NAME=akslabhv
 ISTIO_VERSION=1.11.3
 NODE_COUNT=3
 NODE_VM_SIZE=Standard_DS2_v2
 
-# Create cluster
-az aks create --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --node-count $NODE_COUNT \
-    --node-vm-size $NODE_VM_SIZE --generate-ssh-keys --enable-managed-identity
+# Create vnet and subnet
+az network vnet create --resource-group $RESOURCE_GROUP --location $REGION_NAME --name $VNET_NAME --address-prefixes 10.0.0.0/8 --subnet-name $SUBNET_NAME --subnet-prefixes 10.240.0.0/16
 
-# Integrate ACR
-az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --attach-acr $ACR_NAME
+# Get subnet Id
+SUBNET_ID=$(az network vnet subnet show --resource-group $RESOURCE_GROUP --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv)
+
+# Create cluster and attach to ACR
+az aks create --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --node-count $NODE_COUNT --vnet-subnet-id $SUBNET_ID --node-vm-size $NODE_VM_SIZE --generate-ssh-keys --enable-managed-identity --attach-acr $ACR_NAME
 
 # Get aks credentials to use kubectl
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
@@ -123,20 +127,34 @@ Download istioctl
 
   # Navigate to the istio package directory
   cd istio-1.11.3
-
-  # Add the istioctl client to your path
-  export PATH=$PWD/bin:$PATH
   ```
 
 * Windows:
 
   Download [version 1.11.3](https://github.com/istio/istio/releases/tag/1.11.3) and add  _`<your_path_to_istio_directory>/istio-1.11.3/bin`_ to your Path
 
+Create the following file and name it patch.yaml in the "istio-1.11.3/manifests/profiles" folder.
+
+```yaml
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  values:
+    gateways:
+      istio-ingressgateway:
+        serviceAnnotations:
+          service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+```
+
 Provision resources
 
 ```bash
+# Change directory to the istio/bin folder
+cd istio-1.11.3/bin
+
 # Install istio to your cluster
-istioctl install -y
+kubectl create namespace istio-system
+./istioctl install -f ../manifests/profiles/default.yaml -f ../manifests/profiles/patch.yaml
 
 # Add a namespace label to instruct Istio to automatically inject Envoy sidecar proxies when you deploy your application later
 kubectl label namespace default istio-injection=enabled
