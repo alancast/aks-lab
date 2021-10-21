@@ -21,7 +21,7 @@ az login
 az acr login --name $
 
 # For each of the images you build in the `Deploy to Docker` section
-# Tag it so that you can push it to your ACR 
+# Tag it so that you can push it to your ACR
 docker tag songs:1.0.0 $ACR_NAME.azurecr.io/songs:1.0.0
 
 # Push it to your ACR
@@ -119,7 +119,7 @@ kubectl apply -f myfile.yaml
 Check your deployments and services:
 
 ```bash
-kubectl get pods 
+kubectl get pods
 kubectl get services
 ```
 
@@ -128,6 +128,15 @@ Once all pods are in running state and you have an external IP for your api serv
 ```bash
 curl http://MYEXTERNAL-IP/song?id=6
 ```
+
+## Samples
+
+There are sample deployment files you can use to validate the files you wrote:
+
+- [sample/deploy/api-manifest.yaml](sample/deploy/api-manifest.yaml) - Deploys the API resources.
+- [sample/deploy/contacts-manifest.yaml](sample/deploy/contracts-manifest.yaml) - Deploys the contracts resources.
+- [sample/deploy/songs-manifest.yaml](sample/deploy/songs-manifest.yaml) - Deploys the songs resources.
+- [sample/deploy/client-manifest.yaml](sample/deploy/client-manifest.yaml) - Deploys a client for testing.
 
 ## Debugging
 
@@ -180,7 +189,7 @@ kubectl get pods
 # Check the containers that are running on your client pod (notice that an istio sidecar container is running on every pod -more on that later :)
 kubectl get pods [POD_NAME_HERE] -o jsonpath='{.spec.containers[*].name}'
 
-# Using the Pod name use kubectl exec 
+# Using the Pod name use kubectl exec
 kubectl exec -it [POD_NAME_HERE] -c [CONTAINER_NAME_HERE] -- /bin/bash
 
 # Install curl, and curl to any of the internal services
