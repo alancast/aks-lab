@@ -7,10 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-<<<<<<< HEAD
-=======
 	"sync"
->>>>>>> upstream/main
 
 	"github.com/joho/godotenv"
 )
@@ -50,9 +47,6 @@ var songs = []song{
 	{24, "Nicki Minaj", "Barbie Dreams", "Rap"},
 }
 
-<<<<<<< HEAD
-func retrieve(w http.ResponseWriter, r *http.Request) {
-=======
 var songMutex sync.RWMutex
 
 func retrieve(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +54,6 @@ func retrieve(w http.ResponseWriter, r *http.Request) {
 	songMutex.RLock()
 	defer songMutex.RUnlock()
 
->>>>>>> upstream/main
 	// get a valid id
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
