@@ -63,6 +63,8 @@ func main() {
 	router.POST("/songs", postSong)
 	router.Run(fmt.Sprintf(":%d", port))
 }
+
+// getHealth just returns 200 if we are up and healthy
 func getHealth(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
