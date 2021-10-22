@@ -58,9 +58,13 @@ func main() {
 	log.Println("contractServiceBaseUrl:", contractServiceBaseUrl)
 
 	router := gin.Default()
+	router.GET("/health", getHealth)
 	router.GET("/songs", getSong)
 	router.POST("/songs", postSong)
 	router.Run(fmt.Sprintf(":%d", port))
+}
+func getHealth(c *gin.Context) {
+	c.Status(http.StatusOK)
 }
 
 // getSong locates the song whose ID value matches the id
