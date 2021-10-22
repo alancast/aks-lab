@@ -41,6 +41,7 @@
         "package-lock.json",
         "packages/*/samples/**",
         "packages/Samples/**",
+        "sample/**",
         "temp",
         "test-fixtures/**",
         "test-packages/test-cspell-tools/src/*.txt"
