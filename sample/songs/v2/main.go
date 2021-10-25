@@ -80,7 +80,7 @@ func store(w http.ResponseWriter, r *http.Request, collection *mongo.Collection)
 	defer cancel()
 	result, err := collection.InsertOne(ctx, val)
 	if err != nil {
-		log.Fatalf("failed to add todo %v", err)
+		log.Fatalf("failed to add song %v", err)
 	}
 	val.Id = result.InsertedID.(primitive.ObjectID).Hex()
 
