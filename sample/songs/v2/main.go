@@ -149,13 +149,13 @@ func main() {
 
 	// attempt to connect to a Cosmos instance
 	log.Printf("attempting to connect to Cosmos...")
-	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	err = client.Ping(ctx, nil)
+	pingCtx, pingCancel := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Ping(pingCtx, nil)
 	if err != nil {
 		log.Fatalf("unable to connect to Cosmos - %v", err)
 	}
-	log.Printf("successfully connected to Cosmos.")
+	pingCancel()
+	log.Println("successfully connected to Cosmos.")
 	collection := client.Database(mongoDatabase).Collection(mongoCollection)
 
 	// create HTTP handlers
