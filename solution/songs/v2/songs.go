@@ -145,9 +145,7 @@ func getSongs(c *gin.Context) {
 	// Get all songs from the database
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	var songs []song
 	cursor, err := collection.Find(ctx, bson.D{})
-	// cursor, err = collection.Find(context.TODO(), bson.D{})
 	if err == mongo.ErrNoDocuments {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "No songs found"})
 		log.Println("WARNING: No song with id were found")
@@ -158,8 +156,9 @@ func getSongs(c *gin.Context) {
 		return
 	}
 
+	var songs []song
 	for cursor.Next(ctx) {
-		//Create a value into which the single document can be decoded
+		//Create a song into which the single document can be decoded
 		var newSong song
 		err := cursor.Decode(&newSong)
 		if err != nil {
