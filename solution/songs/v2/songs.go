@@ -24,6 +24,8 @@ type song struct {
 	Genre  string `json:"genre" bson:"genre"`
 }
 
+/*
+Legacy version where songs were all loaded into memory
 var songs = []song{
 	{"0", "Drake", "In My Feelings", "HipHop"},
 	{"1", "Maroon 5", "Girls Like You", "Pop"},
@@ -51,6 +53,7 @@ var songs = []song{
 	{"23", "Eric Church", "Desperate Man", "Country"},
 	{"24", "Nicki Minaj", "Barbie Dreams", "Rap"},
 }
+*/
 
 func main() {
 	err := godotenv.Load(".env")
@@ -134,7 +137,6 @@ func ApiMiddleware(dbColl *mongo.Collection) gin.HandlerFunc {
 
 // getSongs responds with the list of all songs as JSON.
 func getSongs(c *gin.Context) {
-	// Don't forget type assertion when getting the connection from context.
 	collection, ok := c.MustGet("databaseCollection").(*mongo.Collection)
 	if !ok {
 		log.Println("ERROR: Couldn't fetch database collection")
@@ -174,7 +176,6 @@ func getSongs(c *gin.Context) {
 // getSong locates the song whose ID value matches the id
 // parameter sent by the client, then returns that song as a response.
 func getSong(c *gin.Context) {
-	// Don't forget type assertion when getting the connection from context.
 	collection, ok := c.MustGet("databaseCollection").(*mongo.Collection)
 	if !ok {
 		log.Println("ERROR: Couldn't fetch database collection")
@@ -211,7 +212,6 @@ func getSong(c *gin.Context) {
 
 // postSong adds a song from JSON received in the request body.
 func postSong(c *gin.Context) {
-	// Don't forget type assertion when getting the connection from context.
 	collection, ok := c.MustGet("databaseCollection").(*mongo.Collection)
 	if !ok {
 		log.Println("ERROR: Couldn't fetch database collection")
