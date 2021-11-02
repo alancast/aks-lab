@@ -18,7 +18,7 @@ import (
 )
 
 type song struct {
-	Id      int     `json:"id"`
+	Id      string  `json:"id"`
 	Title   string  `json:"title"`
 	Artist  string  `json:"artist"`
 	Payment float64 `json:"payment"`
@@ -72,21 +72,38 @@ func getHealth(c *gin.Context) {
 // getSong locates the song whose ID value matches the id
 // parameter sent by the client, then returns that song as a response.
 func getSong(c *gin.Context) {
+	// determine the expected x-api-version
+	apiVersion := c.Request.Header.Get("x-api-version")
+
 	songServiceUrl := songServiceBaseUrl
 	id_str, ok := c.GetQuery("id")
 	if ok {
-		// Check if id is a valid int
-		id, err := strconv.Atoi(id_str)
-		if err != nil || id < 0 {
-			c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Song id must be an integer greater than 0"})
-			return
+		// Check if id is a valid int if it's v1
+		if apiVersion == "v1" {
+			id, err := strconv.Atoi(id_str)
+			if err != nil || id < 0 {
+				c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Song id must be an integer greater than 0"})
+				return
+			}
 		}
 
 		songServiceUrl = fmt.Sprint(songServiceUrl, "/", id_str)
 	}
 
+	// create the request and add the header
+	songsRequest, err := http.NewRequest("GET", songServiceUrl, nil)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Failed to create songs request"))
+		log.Println(err)
+		return
+	}
+	if apiVersion != "" {
+		songsRequest.Header.Set("x-api-version", apiVersion)
+	}
+
 	// Query to get the song(s)
-	songsResponse, err := http.Get(songServiceUrl)
+	client := http.Client{}
+	songsResponse, err := client.Do(songsRequest)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Failed to contact song service"))
 		log.Println(err)
@@ -162,8 +179,24 @@ func getArtistPayment(artist string) float64 {
 
 // postSong adds a song from JSON received in the request body.
 func postSong(c *gin.Context) {
+	// determine the expected x-api-version
+	apiVersion := c.Request.Header.Get("x-api-version")
+
+	// create the request and add the header
+	songsRequest, err := http.NewRequest("POST", songServiceBaseUrl, c.Request.Body)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, errors.New("Failed to create songs request"))
+		log.Println(err)
+		return
+	}
+	songsRequest.Header.Add("Content-Type", "application/json")
+	if apiVersion != "" {
+		songsRequest.Header.Set("x-api-version", apiVersion)
+	}
+
 	// Send song to song service
-	songsResponse, err := http.Post(songServiceBaseUrl, "application/json", c.Request.Body)
+	client := http.Client{}
+	songsResponse, err := client.Do(songsRequest)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, errors.New("Failed to contact song service"))
 		log.Println(err)

@@ -12,38 +12,38 @@ import (
 )
 
 type song struct {
-	Id     int    `json:"id"`
+	Id     string `json:"id"`
 	Artist string `json:"artist"`
 	Title  string `json:"title"`
 	Genre  string `json:"genre"`
 }
 
 var songs = []song{
-	{0, "Drake", "In My Feelings", "HipHop"},
-	{1, "Maroon 5", "Girls Like You", "Pop"},
-	{2, "Cardi B", "I Like It", "HipHop"},
-	{3, "6ix9ine", "FEFE", "Pop"},
-	{4, "Post Malone", "Better Now", "Rap"},
-	{5, "Eminem", "Lucky You", "Rap"},
-	{6, "Juice WRLD", "Lucid Dreams", "Rap"},
-	{7, "Eminem", "The Ringer", "Rap"},
-	{8, "Travis Scott", "Sicko Mode", "HipHop"},
-	{9, "Tyga", "Taste", "HipHop"},
-	{10, "Khalid & Normani", "Love Lies", "HipHop"},
-	{11, "5 Seconds Of Summer", "Youngblood", "Pop"},
-	{12, "Ella Mai", "Boo'd Up", "HipHop"},
-	{13, "Ariana Grande", "God Is A Woman", "Pop"},
-	{14, "Imagine Dragons", "Natural", "Rock"},
-	{15, "Ed Sheeran", "Perfect", "Pop"},
-	{16, "Taylor Swift", "Delicate", "Pop"},
-	{17, "Florida Georgia Line", "Simple", "Country"},
-	{18, "Luke Bryan", "Sunrise, Sunburn, Sunset", "Country"},
-	{19, "Jason Aldean", "Drowns The Whiskey", "Country"},
-	{20, "Childish Gambino", "Feels Like Summer", "HipHop"},
-	{21, "Weezer", "Africa", "Rock"},
-	{22, "Panic! At The Disco", "High Hopes", "Rock"},
-	{23, "Eric Church", "Desperate Man", "Country"},
-	{24, "Nicki Minaj", "Barbie Dreams", "Rap"},
+	{"0", "Drake", "In My Feelings", "HipHop"},
+	{"1", "Maroon 5", "Girls Like You", "Pop"},
+	{"2", "Cardi B", "I Like It", "HipHop"},
+	{"3", "6ix9ine", "FEFE", "Pop"},
+	{"4", "Post Malone", "Better Now", "Rap"},
+	{"5", "Eminem", "Lucky You", "Rap"},
+	{"6", "Juice WRLD", "Lucid Dreams", "Rap"},
+	{"7", "Eminem", "The Ringer", "Rap"},
+	{"8", "Travis Scott", "Sicko Mode", "HipHop"},
+	{"9", "Tyga", "Taste", "HipHop"},
+	{"10", "Khalid & Normani", "Love Lies", "HipHop"},
+	{"11", "5 Seconds Of Summer", "Youngblood", "Pop"},
+	{"12", "Ella Mai", "Boo'd Up", "HipHop"},
+	{"13", "Ariana Grande", "God Is A Woman", "Pop"},
+	{"14", "Imagine Dragons", "Natural", "Rock"},
+	{"15", "Ed Sheeran", "Perfect", "Pop"},
+	{"16", "Taylor Swift", "Delicate", "Pop"},
+	{"17", "Florida Georgia Line", "Simple", "Country"},
+	{"18", "Luke Bryan", "Sunrise, Sunburn, Sunset", "Country"},
+	{"19", "Jason Aldean", "Drowns The Whiskey", "Country"},
+	{"20", "Childish Gambino", "Feels Like Summer", "HipHop"},
+	{"21", "Weezer", "Africa", "Rock"},
+	{"22", "Panic! At The Disco", "High Hopes", "Rock"},
+	{"23", "Eric Church", "Desperate Man", "Country"},
+	{"24", "Nicki Minaj", "Barbie Dreams", "Rap"},
 }
 
 func main() {
@@ -82,7 +82,7 @@ func getSong(c *gin.Context) {
 	// Loop over the list of songs, looking for
 	// a song whose ID value matches the parameter.
 	for _, song := range songs {
-		if song.Id == id {
+		if song.Id == strconv.Itoa(id) {
 			c.IndentedJSON(http.StatusOK, song)
 			return
 		}
@@ -100,7 +100,7 @@ func postSong(c *gin.Context) {
 	}
 
 	// Give the new song an Id
-	newSong.Id = len(songs)
+	newSong.Id = strconv.Itoa(len(songs))
 
 	// Add the new song to the slice.
 	songs = append(songs, newSong)
