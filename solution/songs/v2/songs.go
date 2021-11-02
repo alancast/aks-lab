@@ -236,7 +236,5 @@ func postSong(c *gin.Context) {
 	}
 	newSong.Id = result.InsertedID.(primitive.ObjectID).Hex()
 
-	// Add the new song to the slice.
-	songs = append(songs, newSong)
 	c.IndentedJSON(http.StatusCreated, newSong)
 }

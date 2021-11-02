@@ -23,8 +23,7 @@ spec:
   gateways:
   - default/api-gateway
   http:
-  - match:
-    route:
+  - route:
     - destination:
         host: api
         port:
